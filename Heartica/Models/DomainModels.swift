@@ -83,11 +83,15 @@ struct TagCategory: Identifiable, Equatable {
         TagCategory(id: 3, title: "Mindfulness"),
         TagCategory(id: 4, title: "Eating")
     ]
+
+    var displayTitle: String { L(title) }
 }
 
 struct PresetTag: Identifiable, Equatable {
     let id: String
     let title: String
+
+    var displayTitle: String { L(title) }
     let colorName: String
     let categoryID: Int
     let cluster: String
@@ -113,6 +117,10 @@ struct TagCluster: Identifiable, Equatable {
     let shortDescription: String
     let longDescription: String
 
+    var displayTitle: String { L(title) }
+    var displayShort: String { L(shortDescription) }
+    var displayLong: String { L(longDescription) }
+
     static let all: [TagCluster] = [
         TagCluster(id: "rest", title: "Rest & Recovery",
                    shortDescription: "Track how rest and recovery affect your heart.",
@@ -137,7 +145,7 @@ struct TagCluster: Identifiable, Equatable {
 struct TagResolver {
     static func title(for id: String?) -> String? {
         guard let id else { return nil }
-        if let preset = PresetTag.all.first(where: { $0.id == id }) { return preset.title }
+        if let preset = PresetTag.all.first(where: { $0.id == id }) { return preset.displayTitle }
         if let custom = HealthDataStore.shared.customTags().first(where: { $0.id == id }) { return custom.name }
         return nil
     }
@@ -159,84 +167,99 @@ struct MetricStatus {
     let range: String
 
     var displayStatus: String {
-        status.replacingOccurrences(of: "_", with: " ").capitalized
+        switch status {
+        case "veryHigh": return L("Very High")
+        case "veryLow": return L("Very Low")
+        case "very_low": return L("Very Low")
+        case "high": return L("High")
+        case "low": return L("Low")
+        case "normal": return L("Normal")
+        case "elevated": return L("Elevated")
+        case "average": return L("Average")
+        case "excellent": return L("Excellent")
+        case "good": return L("Good")
+        case "athlete": return L("Athlete")
+        case "reduced": return L("Reduced")
+        case "relaxed": return L("Relaxed")
+        default: return status.capitalized
+        }
     }
 }
 
 enum MetricCatalog {
     static func pulseStatus(_ value: Double) -> MetricStatus {
         switch value {
-        case 120...: return MetricStatus(status: "veryHigh", indicator: "Severe Tachycardia", color: "red", range: "120+ bpm")
-        case 100..<120: return MetricStatus(status: "high", indicator: "Mild Tachycardia", color: "orange", range: "100–120 bpm")
-        case 60..<100: return MetricStatus(status: "normal", indicator: "Normal Heart Rate", color: "green", range: "60–100 bpm")
-        default: return MetricStatus(status: "low", indicator: "Bradycardia", color: "blue", range: "<60 bpm")
+        case 120...: return MetricStatus(status: "veryHigh", indicator: L("Severe Tachycardia"), color: "red", range: "120+ bpm")
+        case 100..<120: return MetricStatus(status: "high", indicator: L("Mild Tachycardia"), color: "orange", range: "100–120 bpm")
+        case 60..<100: return MetricStatus(status: "normal", indicator: L("Normal Heart Rate"), color: "green", range: "60–100 bpm")
+        default: return MetricStatus(status: "low", indicator: L("Bradycardia"), color: "blue", range: "<60 bpm")
         }
     }
 
     static func hrvStatus(_ value: Double) -> MetricStatus {
         switch value {
-        case 100...: return MetricStatus(status: "high", indicator: "Excellent variability", color: "green", range: "≥100 ms")
-        case 50..<100: return MetricStatus(status: "normal", indicator: "Moderate stress", color: "green", range: "50–100 ms")
-        default: return MetricStatus(status: "low", indicator: "Possible chronic stress", color: "yellow", range: "<50 ms")
+        case 100...: return MetricStatus(status: "high", indicator: L("Excellent variability"), color: "green", range: "≥100 ms")
+        case 50..<100: return MetricStatus(status: "normal", indicator: L("Moderate stress"), color: "green", range: "50–100 ms")
+        default: return MetricStatus(status: "low", indicator: L("Possible chronic stress"), color: "yellow", range: "<50 ms")
         }
     }
 
     static func rmssdStatus(_ value: Double) -> MetricStatus {
         switch value {
-        case 80...: return MetricStatus(status: "excellent", indicator: "Elite athlete", color: "green", range: "≥80 ms")
-        case 50..<80: return MetricStatus(status: "good", indicator: "Well-trained individual", color: "green", range: "50–80 ms")
-        case 30..<50: return MetricStatus(status: "average", indicator: "Balanced state", color: "yellow", range: "30–50 ms")
-        case 20..<30: return MetricStatus(status: "low", indicator: "Possible chronic stress", color: "orange", range: "20–30 ms")
-        default: return MetricStatus(status: "veryLow", indicator: "High stress", color: "red", range: "<20 ms")
+        case 80...: return MetricStatus(status: "excellent", indicator: L("Elite athlete"), color: "green", range: "≥80 ms")
+        case 50..<80: return MetricStatus(status: "good", indicator: L("Well-trained individual"), color: "green", range: "50–80 ms")
+        case 30..<50: return MetricStatus(status: "average", indicator: L("Balanced state"), color: "yellow", range: "30–50 ms")
+        case 20..<30: return MetricStatus(status: "low", indicator: L("Possible chronic stress"), color: "orange", range: "20–30 ms")
+        default: return MetricStatus(status: "veryLow", indicator: L("High stress"), color: "red", range: "<20 ms")
         }
     }
 
     static func pnn50Status(_ value: Double) -> MetricStatus {
         switch value {
-        case 30...: return MetricStatus(status: "excellent", indicator: "Good stress recovery", color: "green", range: "≥30%")
-        case 20..<30: return MetricStatus(status: "normal", indicator: "Healthy level", color: "green", range: "20–30%")
-        case 10..<20: return MetricStatus(status: "reduced", indicator: "Possible mild stress", color: "yellow", range: "10–20%")
-        default: return MetricStatus(status: "low", indicator: "Chronic stress", color: "orange", range: "<10%")
+        case 30...: return MetricStatus(status: "excellent", indicator: L("Good stress recovery"), color: "green", range: "≥30%")
+        case 20..<30: return MetricStatus(status: "normal", indicator: L("Healthy level"), color: "green", range: "20–30%")
+        case 10..<20: return MetricStatus(status: "reduced", indicator: L("Possible mild stress"), color: "yellow", range: "10–20%")
+        default: return MetricStatus(status: "low", indicator: L("Chronic stress"), color: "orange", range: "<10%")
         }
     }
 
     static func stressStatus(_ value: Double) -> MetricStatus {
         let v = Int(value.rounded())
         switch v {
-        case 80...: return MetricStatus(status: "veryHigh", indicator: "Highly tense", color: "red", range: "80–100")
-        case 70..<80: return MetricStatus(status: "high", indicator: "Slightly tense", color: "orange", range: "70–80")
-        case 35..<70: return MetricStatus(status: "average", indicator: "Mildly calm", color: "yellow", range: "35–70")
-        case 25..<35: return MetricStatus(status: "low", indicator: "Quite relaxed", color: "green", range: "25–35")
-        default: return MetricStatus(status: "relaxed", indicator: "Deeply relaxed", color: "blue", range: "0–25")
+        case 80...: return MetricStatus(status: "veryHigh", indicator: L("Highly tense"), color: "red", range: "80–100")
+        case 70..<80: return MetricStatus(status: "high", indicator: L("Slightly tense"), color: "orange", range: "70–80")
+        case 35..<70: return MetricStatus(status: "average", indicator: L("Mildly calm"), color: "yellow", range: "35–70")
+        case 25..<35: return MetricStatus(status: "low", indicator: L("Quite relaxed"), color: "green", range: "25–35")
+        default: return MetricStatus(status: "relaxed", indicator: L("Deeply relaxed"), color: "blue", range: "0–25")
         }
     }
 
     static func energyStatus(_ value: Double) -> MetricStatus {
         switch value {
-        case 100...: return MetricStatus(status: "excellent", indicator: "Strong recovery", color: "green", range: "100–120")
-        case 80..<100: return MetricStatus(status: "good", indicator: "Balanced state", color: "yellow", range: "80–100")
-        case 60..<80: return MetricStatus(status: "average", indicator: "Increased stress", color: "orange", range: "60–80")
-        default: return MetricStatus(status: "low", indicator: "High stress", color: "red", range: "0–60")
+        case 100...: return MetricStatus(status: "excellent", indicator: L("Strong recovery"), color: "green", range: "100–120")
+        case 80..<100: return MetricStatus(status: "good", indicator: L("Balanced state"), color: "yellow", range: "80–100")
+        case 60..<80: return MetricStatus(status: "average", indicator: L("Increased stress"), color: "orange", range: "60–80")
+        default: return MetricStatus(status: "low", indicator: L("High stress"), color: "red", range: "0–60")
         }
     }
 
     static func healthIndexStatus(_ value: Double) -> MetricStatus {
         switch value {
-        case 6.5...: return MetricStatus(status: "athlete", indicator: "Strong recovery", color: "green", range: "6.5+")
-        case 5.5..<6.5: return MetricStatus(status: "excellent", indicator: "Optimal recovery", color: "green", range: "5.5–6.5")
-        case 4.5..<5.5: return MetricStatus(status: "good", indicator: "Normal recovery", color: "yellow", range: "4.5–5.5")
-        case 3.5..<4.5: return MetricStatus(status: "average", indicator: "Moderate stress", color: "orange", range: "3.5–4.5")
-        default: return MetricStatus(status: "low", indicator: "High stress", color: "red", range: "<3.5")
+        case 6.5...: return MetricStatus(status: "athlete", indicator: L("Strong recovery"), color: "green", range: "6.5+")
+        case 5.5..<6.5: return MetricStatus(status: "excellent", indicator: L("Optimal recovery"), color: "green", range: "5.5–6.5")
+        case 4.5..<5.5: return MetricStatus(status: "good", indicator: L("Normal recovery"), color: "yellow", range: "4.5–5.5")
+        case 3.5..<4.5: return MetricStatus(status: "average", indicator: L("Moderate stress"), color: "orange", range: "3.5–4.5")
+        default: return MetricStatus(status: "low", indicator: L("High stress"), color: "red", range: "<3.5")
         }
     }
 
     static func csiStatus(_ value: Double) -> (title: String, color: String) {
         switch value {
-        case ..<50: return ("Low stress", "green")
-        case 50..<150: return ("Optimal", "green")
-        case 150..<300: return ("Moderate stress", "yellow")
-        case 300..<500: return ("High stress", "orange")
-        default: return ("Very high stress", "red")
+        case ..<50: return (L("Low stress"), "green")
+        case 50..<150: return (L("Normal"), "green")
+        case 150..<300: return (L("Moderate stress"), "yellow")
+        case 300..<500: return (L("High stress"), "orange")
+        default: return (L("Very High"), "red")
         }
     }
 }

@@ -336,8 +336,8 @@ final class HealthDataStore: ObservableObject {
         let calendar = Calendar.current
         let custom = customTags()
         if custom.isEmpty {
-            createCustomTag(name: "Morning Run", colorName: "green", cluster: "stress")
-            createCustomTag(name: "Coffee", colorName: "orange", cluster: "food")
+            createCustomTag(name: L("Morning Run"), colorName: "green", cluster: "stress")
+            createCustomTag(name: L("Coffee"), colorName: "orange", cluster: "food")
         }
         let tags = customTags().map(\.id)
         var rng = SystemRandomNumberGenerator()

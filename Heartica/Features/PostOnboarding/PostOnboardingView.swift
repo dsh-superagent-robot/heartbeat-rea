@@ -55,13 +55,13 @@ struct PostOnboardingView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .alert("Proceed Without Apple Health?", isPresented: $showSkipConfirmation) {
+        .alert(L("Proceed Without Apple Health?"), isPresented: $showSkipConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Confirm") {
                 withAnimation { step = .checkData }
             }
         } message: {
-            Text("You can connect Apple Health later in Settings.")
+            Text(L("You can connect Apple Health later in Settings."))
         }
         .sheet(isPresented: $showDisclaimer) {
             disclaimerSheet
@@ -171,7 +171,7 @@ struct PostOnboardingView: View {
                     .font(.system(size: 40, weight: .semibold))
                     .foregroundColor(AppColor.brand)
             }
-            Text(healthConnected ? "Successfully **Synced**" : "Syncing with Apple Health…")
+            Text(.init(L(healthConnected ? "Successfully **Synced**" : "Syncing with Apple Health…")))
                 .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundColor(AppColor.textPrimary)
                 .multilineTextAlignment(.center)
@@ -250,7 +250,7 @@ struct PostOnboardingView: View {
     private func quiz(title: String, options: [String], key: String) -> some View {
         VStack(spacing: 24) {
             Spacer()
-            Text(.init(title))
+            Text(.init(L(title)))
                 .font(.system(size: 26, weight: .bold, design: .rounded))
                 .multilineTextAlignment(.center)
                 .foregroundColor(AppColor.textPrimary)
@@ -263,7 +263,7 @@ struct PostOnboardingView: View {
                         advanceQuiz()
                     } label: {
                         HStack {
-                            Text(option)
+                            Text(L(option))
                                 .font(.system(size: 17, weight: .semibold))
                                 .foregroundColor(AppColor.textPrimary)
                             Spacer()
@@ -336,10 +336,10 @@ struct PostOnboardingView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 18) {
                     VStack(spacing: 4) {
-                        Text("Your Heart Health")
+                        Text(L("Your Heart Health"))
                             .font(.system(size: 17, weight: .medium))
                             .foregroundColor(AppColor.textSecondary)
-                        Text("**Risk Score**")
+                        Text(.init("**" + L("Risk Score") + "**"))
                             .font(.system(size: 32, weight: .bold, design: .rounded))
                             .foregroundColor(AppColor.textPrimary)
                     }
@@ -349,24 +349,24 @@ struct PostOnboardingView: View {
                     VStack(spacing: 0) {
                         resultRow(icon: "scalemass", color: AppColor.orange,
                                   title: "Body Mass Index",
-                                  value: profile.bmiBand ?? "Not calculated",
-                                  subtitle: profile.bmi.map { String(format: "%.1f", $0) } ?? "No Data")
+                                  value: L(profile.bmiBand ?? "Not calculated"),
+                                  subtitle: profile.bmi.map { String(format: "%.1f", $0) } ?? L("No Data"))
                         Divider().padding(.leading, 56)
                         resultRow(icon: "waveform.path.ecg", color: AppColor.brand,
                                   title: "Blood Pressure",
-                                  value: "No Data",
-                                  subtitle: "Not recorded")
+                                  value: L("No Data"),
+                                  subtitle: L("Not recorded"))
                         Divider().padding(.leading, 56)
                         resultRow(icon: "heart", color: AppColor.purple,
                                   title: "Age-Related Risk",
-                                  value: ageRisk.value,
-                                  subtitle: ageRisk.subtitle)
+                                  value: L(ageRisk.value),
+                                  subtitle: L(ageRisk.subtitle))
                         if answers["anxiety"] == "Often" {
                             Divider().padding(.leading, 56)
                             resultRow(icon: "bolt.heart", color: AppColor.danger,
                                       title: "Stress & Anxiety Risk",
-                                      value: "High",
-                                      subtitle: "Frequent anxiety")
+                                      value: L("High"),
+                                      subtitle: L("Frequent anxiety"))
                         }
                     }
                     .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(AppColor.surface))
@@ -406,15 +406,15 @@ struct PostOnboardingView: View {
                 .frame(width: 36, height: 36)
                 .background(Circle().fill(color.opacity(0.12)))
             VStack(alignment: .leading, spacing: 3) {
-                Text(title)
+                Text(L(title))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
-                Text(subtitle)
+                Text(L(subtitle))
                     .font(.system(size: 12))
                     .foregroundColor(AppColor.textSecondary)
             }
             Spacer()
-            Text(value)
+            Text(L(value))
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(AppColor.textPrimary)
         }
@@ -461,7 +461,7 @@ struct CalculationProgressView: View {
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .foregroundColor(AppColor.textPrimary)
             }
-            Text(messages[min(index, messages.count - 1)])
+            Text(L(messages[min(index, messages.count - 1)]))
                 .font(.system(size: 19, weight: .semibold))
                 .foregroundColor(AppColor.textPrimary)
                 .multilineTextAlignment(.center)
@@ -470,7 +470,7 @@ struct CalculationProgressView: View {
             VStack(spacing: 8) {
                 Image(systemName: "lightbulb.fill")
                     .foregroundColor(AppColor.warning)
-                Text(.init(facts[min(index, facts.count - 1)]))
+                Text(.init(L(facts[min(index, facts.count - 1)])))
                     .font(.system(size: 13))
                     .foregroundColor(AppColor.textSecondary)
                     .multilineTextAlignment(.center)

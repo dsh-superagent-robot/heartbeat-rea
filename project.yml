@@ -23,6 +23,9 @@ targets:
       path: Heartica/Info.plist
       properties:
         CFBundleDisplayName: Heartica
+        CFBundleLocalizations:
+          - en
+          - zh-Hans
         CFBundleShortVersionString: "2.10"
         CFBundleVersion: "582"
         LSRequiresIPhoneOS: true

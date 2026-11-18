@@ -183,9 +183,9 @@ struct HistoryView: View {
     }
 
     private var filterTitle: String {
-        guard let filterTagId else { return "Filter" }
-        if filterTagId.isEmpty { return "No Tag" }
-        return TagResolver.title(for: filterTagId) ?? "Filter"
+        guard let filterTagId else { return L("Filter") }
+        if filterTagId.isEmpty { return L("No Tag") }
+        return TagResolver.title(for: filterTagId) ?? L("Filter")
     }
 
     private var emptyState: some View {
@@ -328,28 +328,28 @@ struct HistoryView: View {
         case .heart(let measurement):
             let band = MetricCatalog.healthIndexStatus(measurement.healthIndex)
             return LogContent(icon: "heart.fill", color: AppColor.brand,
-                              title: "\(Fmt.time(measurement.time)) - Health Index",
-                              value: "\(Int(measurement.pulse)) bpm",
+                              title: "\(Fmt.time(measurement.time)) - \(L("Health Index"))",
+                              value: LF("%d bpm", Int(measurement.pulse)),
                               status: band.displayStatus,
                               statusColor: color(band.color))
         case .pressure(let record):
             let band = VitalsStatus.pressure(sys: record.sys)
             return LogContent(icon: "waveform.path.ecg", color: AppColor.brand,
-                              title: "\(Fmt.time(record.createdAt)) - Blood Pressure",
+                              title: "\(Fmt.time(record.createdAt)) - \(L("Blood Pressure"))",
                               value: "\(record.sys)/\(record.dia) mmHg",
                               status: band.title,
                               statusColor: color(band.color))
         case .oxygen(let record):
             let band = VitalsStatus.oxygen(record.value)
             return LogContent(icon: "lungs.fill", color: AppColor.blue,
-                              title: "\(Fmt.time(record.createdAt)) - Blood Oxygen",
+                              title: "\(Fmt.time(record.createdAt)) - \(L("Blood Oxygen"))",
                               value: "\(record.value)%",
                               status: band.title,
                               statusColor: color(band.color))
         case .glucose(let record):
             let unit = GlucoseUnit.current
             return LogContent(icon: "drop.fill", color: AppColor.teal,
-                              title: "\(Fmt.time(record.createdAt)) - Blood Sugar",
+                              title: "\(Fmt.time(record.createdAt)) - \(L("Blood Sugar"))",
                               value: unit.formatted(mgdl: record.value),
                               status: "",
                               statusColor: AppColor.textSecondary)
@@ -408,8 +408,8 @@ struct HistoryView: View {
     }
 
     private func dayTitle(_ date: Date) -> String {
-        if calendar.isDateInToday(date) { return "Today" }
-        if calendar.isDateInYesterday(date) { return "Yesterday" }
+        if calendar.isDateInToday(date) { return L("Today") }
+        if calendar.isDateInYesterday(date) { return L("Yesterday") }
         return Fmt.date(date, format: "EEEE, MMM d")
     }
 
@@ -450,7 +450,7 @@ struct TagFilterView: View {
                 }
                 Section("Tags") {
                     ForEach(PresetTag.all) { tag in
-                        row(title: tag.title, id: tag.id)
+                        row(title: tag.displayTitle, id: tag.id)
                     }
                     ForEach(dataStore.customTags()) { tag in
                         row(title: tag.name, id: tag.id)
@@ -474,7 +474,7 @@ struct TagFilterView: View {
             dismiss()
         } label: {
             HStack {
-                Text(title).foregroundColor(AppColor.textPrimary)
+                Text(L(title)).foregroundColor(AppColor.textPrimary)
                 Spacer()
                 if isSelected {
                     Image(systemName: "checkmark").foregroundColor(AppColor.brand)

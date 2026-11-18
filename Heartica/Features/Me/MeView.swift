@@ -5,20 +5,20 @@ enum MePeriod: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var short: String {
         switch self {
-        case .day: return "D"
-        case .week: return "W"
-        case .month: return "M"
-        case .quarter: return "3M"
-        case .year: return "Y"
+        case .day: return L("D")
+        case .week: return L("W")
+        case .month: return L("M")
+        case .quarter: return L("3M")
+        case .year: return L("Y")
         }
     }
     var localTitle: String {
         switch self {
-        case .day: return "Daily average"
-        case .week: return "Weekly average"
-        case .month: return "Monthly average"
-        case .quarter: return "Quarterly average"
-        case .year: return "Yearly average"
+        case .day: return L("Daily average")
+        case .week: return L("Weekly average")
+        case .month: return L("Monthly average")
+        case .quarter: return L("Quarterly average")
+        case .year: return L("Yearly average")
         }
     }
 }
@@ -63,7 +63,7 @@ struct MeView: View {
             TagFilterView(selected: $tagFilter).environmentObject(dataStore)
         }
         .sheet(isPresented: $showInfo) {
-            InfoDocumentSheet(title: "Information", markdown: meInfoMarkdown)
+            InfoDocumentSheet(title: L("Information"), markdown: localizedMeInfo)
         }
         .sheet(isPresented: $showAppleHealth) {
             NavigationView {
@@ -115,9 +115,9 @@ struct MeView: View {
 
     private var profileSubtitle: String {
         var parts: [String] = []
-        if let age = appState.profile.age { parts.append("\(age) years") }
+        if let age = appState.profile.age { parts.append(LF("%d years", age)) }
         if appState.profile.gender != .notSet { parts.append(appState.profile.gender.title) }
-        if parts.isEmpty { parts.append("Complete your profile") }
+        if parts.isEmpty { parts.append(L("Complete your profile")) }
         return parts.joined(separator: " · ")
     }
 
@@ -240,7 +240,7 @@ struct MeView: View {
                 Divider()
                 statRow(title: "Heart Rate Variability", value: average(\.sdnn), format: "%.0f", unit: "ms")
                 Divider()
-                statRow(title: "Heart Age", value: HeartAgeService.shared.result.map(Double.init), format: "%.0f", unit: "years")
+                statRow(title: "Heart Age", value: HeartAgeService.shared.result.map(Double.init), format: "%.0f", unit: L("years"))
                 Divider()
                 statRow(title: "RMSSD", value: average(\.rmssd), format: "%.0f", unit: "ms")
                 Divider()
@@ -252,7 +252,7 @@ struct MeView: View {
 
     private func statRow(title: String, value: Double?, format: String, unit: String) -> some View {
         HStack {
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(AppColor.textPrimary)
             Spacer()
@@ -269,7 +269,7 @@ struct MeView: View {
                     Spacer().frame(width: 40)
                 }
             } else {
-                Text("No Data")
+                Text(L("No Data"))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundColor(AppColor.textSecondary)
                     .frame(width: 90, alignment: .trailing)
@@ -335,7 +335,7 @@ struct MeView: View {
                     Text("Achievements")
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(AppColor.textPrimary)
-                    Text("\(achievements.completedCount) completed")
+                    Text(LF("%d completed", achievements.completedCount))
                         .font(.system(size: 12))
                         .foregroundColor(AppColor.textSecondary)
                 }
@@ -363,7 +363,7 @@ struct MeView: View {
                     Text("My Journey")
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(AppColor.textPrimary)
-                    Text("Level \(JourneyService.shared.currentLevel.id) · \(JourneyService.shared.currentLevel.title)")
+                    Text(LF("Level %d", JourneyService.shared.currentLevel.id) + " · " + L(JourneyService.shared.currentLevel.title))
                         .font(.system(size: 12))
                         .foregroundColor(AppColor.textSecondary)
                 }
@@ -391,7 +391,7 @@ struct MeView: View {
                     Text("Apple Health Sync")
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(AppColor.textPrimary)
-                    Text(HealthKitService.shared.connected ? "Connected" : "Connect your Apple Watch data")
+                    Text(L(HealthKitService.shared.connected ? "Connected" : "Connect your Apple Watch data"))
                         .font(.system(size: 12))
                         .foregroundColor(AppColor.textSecondary)
                 }
@@ -426,3 +426,29 @@ Make sure to add a tag for deeper trend analysis and to connect lifestyle qualit
 
 You can also create Custom Tags to track and follow your unique patterns.
 """
+
+
+private let meInfoMarkdownZh = """
+## 我的统计
+追踪心脏指标非常重要，因此你可以在“我的”页面查看详细的健康趋势。
+
+你可以自定义筛选条件，让数据更符合你的需要。
+
+> ### 筛选与功能
+>
+> - **标签筛选：** 使用测量标签筛选数据，更容易观察某一情境下的变化，例如整个月“睡醒后”的状态。
+>
+> - **时间筛选：** 随着测量增多，可以把时间窗口切换为月、季度或年。
+>
+> - **切换时间段：** 有时需要回顾过去的平均值，使用箭头即可在不同时间段之间切换。
+>
+> - **趋势线：** 数据有时会有波动，趋势线可以帮助你理解整体方向。应用内所有图表使用同一套平滑算法。
+
+建议为测量添加标签，以便进行更深入的关联分析。
+
+你也可以创建自定义标签，追踪自己独特的生活模式。
+"""
+
+private var localizedMeInfo: String {
+    LanguageStore.shared.effective == .chinese ? meInfoMarkdownZh : meInfoMarkdown
+}

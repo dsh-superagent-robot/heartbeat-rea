@@ -6,22 +6,22 @@ enum DashboardPeriod: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .lastMeasure: return "Last measurement"
-        case .day: return "Day average"
-        case .week: return "Week average"
-        case .month: return "Month average"
-        case .quarter: return "Quarter average"
-        case .year: return "Year average"
+        case .lastMeasure: return L("Last measurement")
+        case .day: return L("Day average")
+        case .week: return L("Week average")
+        case .month: return L("Month average")
+        case .quarter: return L("Quarter average")
+        case .year: return L("Year average")
         }
     }
     var shortTitle: String {
         switch self {
-        case .lastMeasure: return "Latest"
-        case .day: return "Day"
-        case .week: return "Week"
-        case .month: return "Month"
-        case .quarter: return "3M"
-        case .year: return "Year"
+        case .lastMeasure: return L("Latest")
+        case .day: return L("Day")
+        case .week: return L("Week")
+        case .month: return L("Month")
+        case .quarter: return L("3M")
+        case .year: return L("Year")
         }
     }
 }
@@ -187,7 +187,7 @@ struct DashboardView: View {
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(AppColor.textPrimary)
                     Text(progress.completed
-                         ? (progress.result.map { MetricCatalog.csiStatus(Double($0)).title } ?? "Completed")
+                         ? (progress.result.map { MetricCatalog.csiStatus(Double($0)).title } ?? L("Completed"))
                          : (progress.started ? "Day \(progress.day) of 7" : "7-day protocol"))
                         .font(.system(size: 12))
                         .foregroundColor(AppColor.textSecondary)
@@ -249,9 +249,9 @@ struct DashboardView: View {
 
     private var heartAgeSubtitle: String {
         let service = HeartAgeService.shared
-        if !service.hasRequiredProfile { return "Add Your Age & Gender" }
+        if !service.hasRequiredProfile { return L("Add Your Age & Gender") }
         if service.result != nil, let status = service.status { return status.title }
-        return "Measure your heart rate for 3 days"
+        return L("Measure your heart rate for 3 days")
     }
 
     // MARK: Aggregation
@@ -410,7 +410,7 @@ struct DashboardMetricDetail: View {
                 .padding(20)
             }
             .screenBackground()
-            .navigationTitle(metric.title)
+            .navigationTitle(Text(metric.title))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

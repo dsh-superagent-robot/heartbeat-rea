@@ -8,10 +8,10 @@ enum ResultMetric: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .pulse: return "Pulse"
-        case .healthIndex: return "Health Index"
-        case .energy: return "Energy"
-        case .stress: return "Stress"
+        case .pulse: return L("Pulse")
+        case .healthIndex: return L("Health Index")
+        case .energy: return L("Energy")
+        case .stress: return L("Stress")
         case .hrv: return "HRV"
         case .sdnn: return "SDNN"
         case .rmssd: return "RMSSD"
@@ -21,7 +21,7 @@ enum ResultMetric: String, CaseIterable, Identifiable {
 
     var unit: String {
         switch self {
-        case .pulse: return "bpm"
+        case .pulse: return L("bpm")
         case .rmssd, .sdnn, .hrv: return "ms"
         case .pnn50, .stress, .energy: return "%"
         case .healthIndex: return ""
@@ -173,7 +173,7 @@ struct MeasureResultView: View {
                     Text(status.indicator)
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
-                    Text("Current State · \(status.range)")
+                    Text(LF("Current State · %@", status.range))
                         .font(.system(size: 12))
                         .foregroundColor(.white.opacity(0.55))
                 }
@@ -211,7 +211,7 @@ struct MeasureResultView: View {
                 .foregroundColor(.white.opacity(0.75))
                 .lineSpacing(3)
                 .lineLimit(commentExpanded ? nil : 3)
-            Button(commentExpanded ? "Show Less" : "Read More") {
+            Button(L(commentExpanded ? "Show Less" : "Read More")) {
                 withAnimation { commentExpanded.toggle() }
             }
             .font(.system(size: 12, weight: .semibold))
@@ -227,19 +227,20 @@ struct MeasureResultView: View {
         let hrvStatus = MetricCatalog.rmssdStatus(measurement.rmssd)
         let pulsePhrase: String
         switch pulseStatus.status {
-        case "normal": pulsePhrase = "within the normal resting range"
-        case "low": pulsePhrase = "below the typical resting range"
-        case "high", "veryHigh": pulsePhrase = "above the typical resting range"
-        default: pulsePhrase = "within the typical range"
+        case "normal": pulsePhrase = L("within the normal resting range")
+        case "low": pulsePhrase = L("below the typical resting range")
+        case "high", "veryHigh": pulsePhrase = L("above the typical resting range")
+        default: pulsePhrase = L("within the typical range")
         }
         let stressPhrase: String
         switch stressStatus.status {
-        case "relaxed", "low": stressPhrase = "is quite relaxed"
-        case "average": stressPhrase = "is mildly calm"
-        case "high", "veryHigh": stressPhrase = "is elevated"
-        default: stressPhrase = "is balanced"
+        case "relaxed", "low": stressPhrase = L("is quite relaxed")
+        case "average": stressPhrase = L("is mildly calm")
+        case "high", "veryHigh": stressPhrase = L("is elevated")
+        default: stressPhrase = L("is balanced")
         }
-        return "Your heart rate of \(Int(measurement.pulse)) bpm is \(pulsePhrase). Your stress level \(stressPhrase), while your HRV suggests \(hrvStatus.indicator.lowercased()). Keep measuring at similar times each day to make trends easier to compare."
+        return LF("Your heart rate of %d bpm is %@. Your stress level %@, while your HRV suggests %@. Keep measuring at similar times each day to make trends easier to compare.",
+                  Int(measurement.pulse), pulsePhrase, stressPhrase, hrvStatus.indicator.lowercased())
     }
 
     private var tagCard: some View {
@@ -254,7 +255,7 @@ struct MeasureResultView: View {
                     Text("Tag")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
-                    Text(TagResolver.title(for: measurement.tagId) ?? "Add a Tag")
+                    Text(TagResolver.title(for: measurement.tagId) ?? L("Add a Tag"))
                         .font(.system(size: 12))
                         .foregroundColor(.white.opacity(0.55))
                 }
@@ -384,7 +385,7 @@ struct MetricInfoSheet: View {
                     Text(metric.title)
                         .font(.system(size: 22, weight: .bold, design: .rounded))
                 }
-                Text(metric.description)
+                Text(L(metric.description))
                     .font(.system(size: 15))
                     .foregroundColor(AppColor.textPrimary)
                     .lineSpacing(4)

@@ -148,7 +148,7 @@ struct MeasurementDetailView: View {
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
                 Spacer()
-                Text(TagResolver.title(for: measurement.tagId) ?? "Add a Tag")
+                Text(TagResolver.title(for: measurement.tagId) ?? L("Add a Tag"))
                     .font(.system(size: 13))
                     .foregroundColor(AppColor.brand)
                 Image(systemName: "chevron.right")

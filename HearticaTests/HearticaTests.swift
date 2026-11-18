@@ -113,6 +113,18 @@ final class HearticaTests: XCTestCase {
         XCTAssertEqual(GlucoseUnit.mmolL.mgdlValue(display: 5.0), 90.0, accuracy: 0.001)
     }
 
+    func testChineseLocalization() {
+        let previous = LanguageStore.shared.language
+        defer { LanguageStore.shared.language = previous }
+        LanguageStore.shared.language = .chinese
+        XCTAssertEqual(L("Heart Health"), "心脏健康")
+        XCTAssertEqual(L("Settings"), "设置")
+        XCTAssertEqual(L("Measure Now"), "立即测量")
+        XCTAssertEqual(L("Normal Heart Rate"), "正常心率")
+        LanguageStore.shared.language = .english
+        XCTAssertEqual(L("Heart Health"), "Heart Health")
+    }
+
     func testCatalogIntegrity() {
         XCTAssertEqual(AchievementCatalog.all.count, 21)
         XCTAssertEqual(JourneyCatalog.levels.count, 100)

@@ -110,7 +110,7 @@ struct TagPickerView: View {
 
     private var selectedCountText: String? {
         guard customTags.count >= 20 else { return nil }
-        return "Tag limit reached 20/20"
+        return L("Tag limit reached 20/20")
     }
 
     private var noTagRow: some View {
@@ -138,12 +138,12 @@ struct TagPickerView: View {
 
     private func categorySection(_ category: TagCategory) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(category.title)
+            Text(category.displayTitle)
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(AppColor.textSecondary)
             FlowLayout(spacing: 8) {
                 ForEach(PresetTag.all.filter { $0.categoryID == category.id }) { tag in
-                    tagChip(id: tag.id, title: tag.title, colorName: tag.colorName)
+                    tagChip(id: tag.id, title: tag.displayTitle, colorName: tag.colorName)
                 }
             }
         }
@@ -225,7 +225,7 @@ struct CustomTagsManageView: View {
                                 Text(tag.name)
                                     .foregroundColor(AppColor.textPrimary)
                                 Spacer()
-                                Text(TagCluster.titled(tag.cluster)?.title ?? "General")
+                                Text(TagCluster.titled(tag.cluster)?.displayTitle ?? L("General"))
                                     .font(.system(size: 11))
                                     .foregroundColor(AppColor.textSecondary)
                             }
@@ -236,7 +236,7 @@ struct CustomTagsManageView: View {
                         for index in offsets { dataStore.deleteCustomTag(id: tags[index].id) }
                     }
                 } header: {
-                    Text("\(dataStore.customTags().count)/20 tags")
+                    Text(LF("%d/20 tags", dataStore.customTags().count))
                 }
                 Section {
                     Button {
@@ -312,11 +312,11 @@ struct CustomTagEditorView: View {
                             .foregroundColor(AppColor.textSecondary)
                         Menu {
                             ForEach(TagCluster.all) { item in
-                                Button(item.title) { cluster = item.id }
+                                Button(item.displayTitle) { cluster = item.id }
                             }
                         } label: {
                             HStack {
-                                Text(TagCluster.titled(cluster)?.title ?? "Select")
+                                Text(TagCluster.titled(cluster)?.displayTitle ?? L("Select"))
                                     .font(.system(size: 16))
                                     .foregroundColor(cluster.isEmpty ? AppColor.textSecondary : AppColor.textPrimary)
                                 Spacer()

@@ -228,7 +228,7 @@ struct MeasureFlowView: View {
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(.white.opacity(0.6))
                         }
-                        Text(engine.lastNN > 0 ? "NN \(engine.lastNN) ms" : "Detecting pulse…")
+                        Text(engine.lastNN > 0 ? LF("NN %d ms", engine.lastNN) : L("Detecting pulse…"))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.white.opacity(0.55))
                     } else {
@@ -315,14 +315,14 @@ struct MeasureFlowView: View {
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                 }
-                Text("\(Int(engine.progress * 100))% · \(max(0, Int(mode.duration - engine.elapsed)))s remaining")
+                Text(LF("%d%% · %ds remaining", Int(engine.progress * 100), max(0, Int(mode.duration - engine.elapsed))))
                     .font(.system(size: 13))
                     .foregroundColor(.white.opacity(0.55))
             case .failed(let message):
                 Text("Measurement Failed")
                     .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
-                Text(message)
+                Text(L(message))
                     .font(.system(size: 13))
                     .foregroundColor(.white.opacity(0.55))
                     .multilineTextAlignment(.center)
@@ -338,9 +338,9 @@ struct MeasureFlowView: View {
 
     private var hintText: String {
         if useFrontCamera {
-            return "Place your finger over the selfie camera; ensure bright, even lighting."
+            return L("Place your finger over the selfie camera; ensure bright, even lighting.")
         }
-        return "Place your finger over the rear camera and flash until the window turns red."
+        return L("Place your finger over the rear camera and flash until the window turns red.")
     }
 
     // MARK: Bottom panel
@@ -359,10 +359,10 @@ struct MeasureFlowView: View {
                         .font(.system(size: 13))
                         .foregroundColor(AppColor.warning)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Quick Tip")
+                        Text(L("Quick Tip"))
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(.white.opacity(0.8))
-                        Text("Don't press your finger too hard. Stay relaxed, breathe calmly, and wait for the measurement to complete.")
+                        Text(L("Don't press your finger too hard. Stay relaxed, breathe calmly, and wait for the measurement to complete."))
                             .font(.system(size: 11))
                             .foregroundColor(.white.opacity(0.5))
                             .lineLimit(2)
@@ -433,7 +433,7 @@ struct MeasureFlowView: View {
                     VStack(spacing: 2) {
                         Text(item.title)
                             .font(.system(size: 13, weight: .semibold))
-                        Text("\(Int(item.duration))s")
+                        Text(LF("%ds", Int(item.duration)))
                             .font(.system(size: 9, weight: .medium))
                             .opacity(0.6)
                     }
@@ -612,7 +612,7 @@ struct TutorialSheet: View {
                                 }
                             }
                             if expanded.contains(item.id) {
-                                Text(item.body)
+                                Text(L(item.body))
                                     .font(.system(size: 13))
                                     .foregroundColor(AppColor.textSecondary)
                                     .lineSpacing(3)
@@ -695,7 +695,7 @@ struct CameraTutorialSheet: View {
     private func point(_ text: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Circle().fill(AppColor.brand).frame(width: 5, height: 5).padding(.top, 6)
-            Text(.init(text))
+            Text(.init(L(text)))
                 .font(.system(size: 13))
                 .foregroundColor(AppColor.textSecondary)
                 .lineSpacing(2)

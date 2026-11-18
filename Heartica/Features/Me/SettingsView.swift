@@ -95,11 +95,11 @@ struct ProfileView: View {
 
     private func field(_ label: String, text: Binding<String>, placeholder: String) -> some View {
         HStack {
-            Text(label)
+            Text(L(label))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(AppColor.textSecondary)
                 .frame(width: 80, alignment: .leading)
-            TextField(placeholder, text: text)
+            TextField(L(placeholder), text: text)
                 .font(.system(size: 15))
                 .multilineTextAlignment(.trailing)
         }
@@ -120,9 +120,11 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var dataStore: HealthDataStore
+    @EnvironmentObject private var language: LanguageStore
 
     @State private var showProfile = false
     @State private var showAppearance = false
+    @State private var showLanguage = false
     @State private var showWhatsNew = false
     @State private var showLegal: LegalWebView.Document?
     @State private var showResetConfirm = false
@@ -149,6 +151,13 @@ struct SettingsView: View {
                         } label: {
                             rowLabel(icon: "circle.lefthalf.filled", color: AppColor.purple,
                                      title: "Appearance", value: appState.appearance.title)
+                        }
+                        divider
+                        Button {
+                            showLanguage = true
+                        } label: {
+                            rowLabel(icon: "globe", color: AppColor.blue,
+                                     title: "Language", value: language.language == .system ? L("System") : language.language.title)
                         }
                     }
                     section("Support") {
@@ -217,20 +226,24 @@ struct SettingsView: View {
                 AppearancePicker()
                     .environmentObject(appState)
             }
+            .sheet(isPresented: $showLanguage) {
+                LanguagePicker()
+                    .environmentObject(language)
+            }
             .sheet(isPresented: $showWhatsNew) {
                 WhatsNewView()
             }
             .sheet(item: $showLegal) { LegalWebView(document: $0) }
-            .alert("Reset Onboarding?", isPresented: $showResetConfirm) {
+            .alert(L("Reset Onboarding?"), isPresented: $showResetConfirm) {
                 Button("Cancel", role: .cancel) {}
-                Button("Reset", role: .destructive) {
+                Button(L("Reset"), role: .destructive) {
                     dismiss()
                     appState.resetForOnboarding()
                 }
             } message: {
                 Text("You will return to the onboarding flow. Your health data is kept.")
             }
-            .alert("Seed Sample Data?", isPresented: $showSeedConfirm) {
+            .alert(L("Seed Sample Data?"), isPresented: $showSeedConfirm) {
                 Button("Cancel", role: .cancel) {}
                 Button("Seed") {
                     dataStore.seedDemoData()
@@ -281,7 +294,7 @@ struct SettingsView: View {
 
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(AppColor.textSecondary)
                 .padding(.leading, 4)
@@ -308,7 +321,7 @@ struct SettingsView: View {
                 .foregroundColor(color)
                 .frame(width: 30, height: 30)
                 .background(Circle().fill(color.opacity(0.12)))
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(AppColor.textPrimary)
             Spacer()
@@ -351,6 +364,48 @@ struct SettingsView: View {
     }
 }
 
+struct LanguagePicker: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var language: LanguageStore
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 0) {
+                ForEach(AppLanguage.allCases) { item in
+                    Button {
+                        language.language = item
+                        dismiss()
+                    } label: {
+                        HStack {
+                            Text(item.title)
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(AppColor.textPrimary)
+                            Spacer()
+                            if language.language == item {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(AppColor.brand)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .frame(height: 54)
+                    }
+                    .buttonStyle(.plain)
+                    Divider().padding(.leading, 20)
+                }
+                Spacer()
+            }
+            .screenBackground()
+            .navigationTitle(L("Language"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(L("Done")) { dismiss() }
+                }
+            }
+        }
+    }
+}
+
 struct AppearancePicker: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var appState: AppState
@@ -364,7 +419,7 @@ struct AppearancePicker: View {
                         dismiss()
                     } label: {
                         HStack {
-                            Text(mode.title)
+                            Text(L(mode.title))
                                 .font(.system(size: 16, weight: .medium))
                                 .foregroundColor(AppColor.textPrimary)
                             Spacer()

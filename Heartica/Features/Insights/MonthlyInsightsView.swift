@@ -9,27 +9,27 @@ enum MonthlyMetric: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .healthIndex: return "Health Index"
-        case .energy: return "Energy"
-        case .stress: return "Stress"
-        case .pulse: return "Pulse"
-        case .hrv: return "HRV"
-        case .sdnn: return "SDNN"
-        case .rmssd: return "RMSSD"
-        case .pnn50: return "pNN50"
-        case .stressIndex: return "Stress Index"
-        case .pressureSystolic: return "Pressure SYS"
-        case .pressureDiastolic: return "Pressure DIA"
-        case .bloodOxygen: return "Blood Oxygen"
-        case .glucoseBeforeMeal: return "Glucose Before Meal"
-        case .glucoseAfterMeal: return "Glucose After Meal"
+        case .healthIndex: return L("Health Index")
+        case .energy: return L("Energy")
+        case .stress: return L("Stress")
+        case .pulse: return L("Pulse")
+        case .hrv: return L("HRV")
+        case .sdnn: return L("SDNN")
+        case .rmssd: return L("RMSSD")
+        case .pnn50: return L("pNN50")
+        case .stressIndex: return L("Stress Index")
+        case .pressureSystolic: return L("Pressure SYS")
+        case .pressureDiastolic: return L("Pressure DIA")
+        case .bloodOxygen: return L("Blood Oxygen")
+        case .glucoseBeforeMeal: return L("Glucose Before Meal")
+        case .glucoseAfterMeal: return L("Glucose After Meal")
         }
     }
 
     var unit: String {
         switch self {
         case .healthIndex: return ""
-        case .pulse: return "bpm"
+        case .pulse: return L("bpm")
         case .pressureSystolic, .pressureDiastolic: return "mmHg"
         case .bloodOxygen: return "%"
         case .glucoseBeforeMeal, .glucoseAfterMeal: return GlucoseUnit.current.rawValue
@@ -139,7 +139,7 @@ struct MonthlyInsightsView: View {
     private var calendarGrid: some View {
         VStack(spacing: 8) {
             HStack(spacing: 0) {
-                ForEach(["S", "M", "T", "W", "T", "F", "S"], id: \.self) { day in
+                ForEach(["日", "一", "二", "三", "四", "五", "六"], id: \.self) { day in
                     Text(day)
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundColor(AppColor.textSecondary)
@@ -225,7 +225,7 @@ struct MonthlyInsightsView: View {
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(AppColor.textPrimary)
             if monthValues.isEmpty {
-                Text("Take measurements to see your stats")
+                Text(L("Take measurements to see your stats"))
                     .font(.system(size: 12))
                     .foregroundColor(AppColor.textSecondary)
                     .padding(.vertical, 30)
@@ -260,16 +260,16 @@ struct MonthlyInsightsView: View {
                     .padding(16)
                     .background(Circle().fill(AppColor.surface))
             }
-            Text("Monthly Insights")
+            Text(L("Monthly Insights"))
                 .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundColor(AppColor.textPrimary)
-            Text("Unlock Premium to see full trends")
+            Text(L("Unlock Premium to see full trends"))
                 .font(.system(size: 14))
                 .foregroundColor(AppColor.textSecondary)
             Button {
                 appState.presentPaywall(source: "insights")
             } label: {
-                Text("Unlock")
+                Text(L("Unlock"))
             }
             .buttonStyle(PrimaryButtonStyle())
         }

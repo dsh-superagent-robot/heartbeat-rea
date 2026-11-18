@@ -101,7 +101,7 @@ struct AppleHealthView: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Apple Health Sync")
                             .font(.system(size: 18, weight: .bold))
-                        Text(health.connected ? "Connected" : "Not connected")
+                        Text(L(health.connected ? "Connected" : "Not connected"))
                             .font(.system(size: 12))
                             .foregroundColor(health.connected ? AppColor.success : AppColor.textSecondary)
                     }
@@ -121,12 +121,12 @@ struct AppleHealthView: View {
                 .card()
 
                 if let lastSync = health.lastSync {
-                    Text("Last sync: \(Fmt.date(lastSync, format: "MMM d, yyyy · h:mm a"))")
+                    Text(L("Last sync") + ": " + Fmt.date(lastSync, format: "MMM d, yyyy · h:mm a"))
                         .font(.system(size: 12))
                         .foregroundColor(AppColor.textSecondary)
                 }
                 if let count = health.sampleCount {
-                    Text("\(count) heart-rate samples available in the last 7 days")
+                    Text(LF("%d heart-rate samples available in the last 7 days", count))
                         .font(.system(size: 12))
                         .foregroundColor(AppColor.textSecondary)
                 }
@@ -144,11 +144,11 @@ struct AppleHealthView: View {
                         if health.isWorking {
                             ProgressView().tint(.white)
                         } else {
-                            Text("Sync Now")
+                            Text(L("Sync Now"))
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    Button("Disconnect") { health.disconnect() }
+                    Button(L("Disconnect")) { health.disconnect() }
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(AppColor.danger)
                 } else {
@@ -158,7 +158,7 @@ struct AppleHealthView: View {
                         if health.isWorking {
                             ProgressView().tint(.white)
                         } else {
-                            Text("Connect Apple Health")
+                            Text(L("Connect Apple Health"))
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())

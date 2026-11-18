@@ -43,8 +43,8 @@ final class NotificationService: ObservableObject {
 
     func scheduleCSIReminder() {
         let content = UNMutableNotificationContent()
-        content.title = "Pulse CSI reminder"
-        content.body = "Take a measurement to keep your Chronic Stress Index up to date."
+        content.title = L("Pulse CSI reminder")
+        content.body = L("Take a measurement to keep your Chronic Stress Index up to date.")
         content.sound = .default
         var components = DateComponents()
         components.hour = 20
@@ -57,17 +57,17 @@ final class NotificationService: ObservableObject {
 
     private func reminderTitle(_ type: String) -> String {
         switch type {
-        case "Pressure": return "Blood Pressure reminder"
-        case "Oxygen": return "Blood Oxygen reminder"
-        case "Glucose": return "Blood Sugar reminder"
-        case "Heart Age": return "Heart Age reminder"
-        case "Pulse CSI": return "Pulse CSI reminder"
-        default: return "Measurement reminder"
+        case "Pressure": return L("Blood Pressure reminder")
+        case "Oxygen": return L("Blood Oxygen reminder")
+        case "Glucose": return L("Blood Sugar reminder")
+        case "Heart Age": return L("Heart Age reminder")
+        case "Pulse CSI": return L("Pulse CSI reminder")
+        default: return L("Measurement reminder")
         }
     }
 
     private func reminderBody(_ type: String) -> String {
-        "It's time to log your \(type.lowercased()) in Heartica."
+        LF("It's time to log your %@ in Heartica.", L(type))
     }
 }
 
@@ -160,15 +160,15 @@ struct RemindersView: View {
                 .frame(width: 48, height: 48)
                 .background(Circle().fill(AppColor.brandSoft))
             VStack(alignment: .leading, spacing: 3) {
-                Text("Daily Reminders")
+                Text(L("Daily Reminders"))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
-                Text(notifications.authorized ? "Notifications are enabled" : "Notifications are off")
+                Text(L(notifications.authorized ? "Notifications are enabled" : "Notifications are off"))
                     .font(.system(size: 12))
                     .foregroundColor(AppColor.textSecondary)
             }
             Spacer()
-            Button("Allow") {
+            Button(L("Allow")) {
                 Task {
                     let granted = await notifications.requestAuthorization()
                     if granted { notifications.schedule(reminders: dataStore.reminders()) }
@@ -189,7 +189,7 @@ struct RemindersView: View {
                 .frame(width: 34, height: 34)
                 .background(Circle().fill(AppColor.brandSoft))
             VStack(alignment: .leading, spacing: 2) {
-                Text(reminder.type)
+                Text(L(reminder.type))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
                 Text("Daily")
@@ -221,7 +221,7 @@ struct RemindersView: View {
                     .labelsHidden()
                 Picker("Type", selection: $newType) {
                     ForEach(ReminderType.allCases) { type in
-                        Text(type.rawValue).tag(type)
+                        Text(L(type.rawValue)).tag(type)
                     }
                 }
                 .pickerStyle(.wheel)
@@ -326,7 +326,8 @@ struct PaywallView: View {
                 .buttonStyle(PrimaryButtonStyle())
                 .disabled(isPurchasing)
 
-                Text("3 days free, then \(selectedPlan == .yearly ? "$39.99/year" : "$6.99/week"). Auto-renewable. Cancel anytime.")
+                Text(LF("3 days free, then %@. Auto-renewable. Cancel anytime.",
+                        selectedPlan == .yearly ? L("$39.99/year") : L("$6.99/week")))
                     .font(.system(size: 11))
                     .foregroundColor(.white.opacity(0.5))
                     .multilineTextAlignment(.center)
@@ -399,7 +400,7 @@ struct PaywallView: View {
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(AppColor.brand)
                 .frame(width: 20)
-            Text(text)
+            Text(L(text))
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.white.opacity(0.9))
         }
@@ -439,7 +440,7 @@ struct WhatsNewView: View {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("What's New")
                                 .font(.system(size: 24, weight: .bold, design: .rounded))
-                            Text("Version \(version)")
+                            Text(LF("Version %@", version))
                                 .font(.system(size: 13))
                                 .foregroundColor(AppColor.textSecondary)
                         }
@@ -476,10 +477,10 @@ struct WhatsNewView: View {
                 .frame(width: 38, height: 38)
                 .background(Circle().fill(AppColor.brandSoft))
             VStack(alignment: .leading, spacing: 3) {
-                Text(title)
+                Text(L(title))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
-                Text(text)
+                Text(L(text))
                     .font(.system(size: 13))
                     .foregroundColor(AppColor.textSecondary)
                     .lineSpacing(2)

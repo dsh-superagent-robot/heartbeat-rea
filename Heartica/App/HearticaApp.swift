@@ -131,6 +131,7 @@ final class AppState: ObservableObject {
 @main
 struct HearticaApp: App {
     @StateObject private var appState = AppState()
+    @StateObject private var language = LanguageStore.shared
 
     init() {
         UITabBar.appearance().isHidden = true
@@ -144,6 +145,8 @@ struct HearticaApp: App {
                 .environmentObject(appState.dataStore)
                 .environmentObject(ChartSettingsStore.shared)
                 .preferredColorScheme(appState.colorScheme)
+                .environmentObject(language)
+                .environment(\.locale, language.effectiveLocale)
                 .tint(AppColor.brand)
         }
     }

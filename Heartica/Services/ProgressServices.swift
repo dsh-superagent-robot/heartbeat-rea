@@ -373,7 +373,11 @@ final class JourneyService: ObservableObject {
 
     func taskTitle(for category: String, target: Int, referenceId: String?) -> String {
         if category == "read_article" {
-            return "Read the Article: \(Self.articleTitle(for: referenceId) ?? "Insights")"
+            let title = Self.articleTitle(for: referenceId) ?? "Insights"
+            return L("Read the Article") + ": " + L(title)
+        }
+        if LanguageStore.shared.effective == .chinese {
+            return chineseTaskTitle(category: category, target: target)
         }
         let copy: [String: String] = [
             "any_measures_vol": "Make \(target) Heart Rate Measures",
@@ -415,5 +419,45 @@ final class JourneyService: ObservableObject {
             "full_spectrum_sets": "Full Spectrum: Collect \(target) Sets of Pairs in Each Cluster"
         ]
         return copy[category] ?? category.replacingOccurrences(of: "_", with: " ").capitalized
+    }
+
+    private func chineseTaskTitle(category: String, target: Int) -> String {
+        switch category {
+        case "any_measures_vol": return LF("完成 %d 次心率测量", target)
+        case "any_measures_days": return LF("在 %d 天内测量心率", target)
+        case "all_tags_vol": return LF("完成 %d 次带标签的测量", target)
+        case "all_tags_sets": return LF("为全部 11 个标签各使用至少 %d 次", target)
+        case "all_tag_groups": return "覆盖全部 4 个标签分组"
+        case "apple_health": return "连接 Apple 健康"
+        case "ai_comments_vol": return LF("阅读 %d 条 AI 点评", target)
+        case "any_rest_vol": return LF("完成 %d 次休息测量", target)
+        case "any_rest_pairs": return LF("完成 %d 组休息配对", target)
+        case "any_rest_weeks_with_3": return LF("完成 %d 周，每周至少 3 次休息测量", target)
+        case "load_measures_vol": return LF("完成 %d 次负荷测量", target)
+        case "any_activity_vol": return LF("完成 %d 次活动测量", target)
+        case "exercise_before", "exersice_before": return LF("完成 %d 次运动前测量", target)
+        case "exercise_after", "exersice_after": return LF("完成 %d 次运动后测量", target)
+        case "exercise_pairs", "exersice_pairs": return LF("完成 %d 组运动配对", target)
+        case "meditate_before_vol": return LF("完成 %d 次冥想前测量", target)
+        case "meditate_after_vol": return LF("完成 %d 次冥想后测量", target)
+        case "meditate_pairs": return LF("完成 %d 组冥想配对", target)
+        case "stress_before": return LF("完成 %d 次压力前测量", target)
+        case "stress_during": return LF("完成 %d 次压力中测量", target)
+        case "stress_after": return LF("完成 %d 次压力后测量", target)
+        case "stress_pairs": return LF("完成 %d 组压力配对", target)
+        case "sleep_before": return LF("完成 %d 次睡前测量", target)
+        case "sleep_after": return LF("完成 %d 次睡醒后测量", target)
+        case "sleep_before_days": return LF("累计 %d 天睡前测量", target)
+        case "sleep_after_days": return LF("累计 %d 天睡醒后测量", target)
+        case "sleep_before_streak_days": return LF("连续 %d 天睡前测量", target)
+        case "sleep_after_streak_days": return LF("连续 %d 天睡醒后测量", target)
+        case "sleep_pairs": return LF("记录 %d 组睡前与睡醒后配对", target)
+        case "any_pairs": return LF("完成 %d 组任意前后配对", target)
+        case "consistency_7": return LF("最近 7 天中有 %d 天测量", target)
+        case "consistency_30": return LF("最近 30 天中有 %d 天测量", target)
+        case "consistency_90": return LF("最近 90 天中有 %d 天测量", target)
+        case "full_spectrum_sets": return LF("完成 %d 组全类型配对", target)
+        default: return category
+        }
     }
 }

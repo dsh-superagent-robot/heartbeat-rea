@@ -93,7 +93,7 @@ struct ProfileMetricsForm: View {
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
                         .frame(maxWidth: 100)
-                    Text(model.usesImperial ? "lb" : "kg")
+                    Text(L(model.usesImperial ? "lb" : "kg"))
                         .foregroundColor(AppColor.textSecondary)
                 }
             }
@@ -104,13 +104,13 @@ struct ProfileMetricsForm: View {
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 34)
-                        Text("ft")
+                        Text(L("ft"))
                             .foregroundColor(AppColor.textSecondary)
                         TextField("0", text: $model.inches)
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 34)
-                        Text("in")
+                        Text(L("in"))
                             .foregroundColor(AppColor.textSecondary)
                     }
                 }
@@ -121,7 +121,7 @@ struct ProfileMetricsForm: View {
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .frame(maxWidth: 90)
-                        Text("cm")
+                        Text(L("cm"))
                             .foregroundColor(AppColor.textSecondary)
                     }
                 }
@@ -137,7 +137,7 @@ struct ProfileMetricsForm: View {
 
     private func fieldRow<Content: View>(label: String, @ViewBuilder content: () -> Content) -> some View {
         HStack {
-            Text(label)
+            Text(L(label))
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(AppColor.textSecondary)
             Spacer()
@@ -167,7 +167,7 @@ struct LegalWebView: View {
     var body: some View {
         NavigationView {
             WebView(url: document.url)
-                .navigationTitle(document.title)
+                .navigationTitle(L(document.title))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {

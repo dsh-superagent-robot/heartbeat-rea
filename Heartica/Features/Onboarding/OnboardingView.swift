@@ -163,13 +163,13 @@ struct OnboardingView: View {
                 .padding(.top, 4)
 
             VStack(spacing: 12) {
-                Text(.init(page.title))
+                Text(.init(L(page.title)))
                     .font(.system(size: 29, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(page.subtitle)
+                Text(L(page.subtitle))
                     .font(.system(size: 15, weight: .regular))
                     .foregroundColor(.white.opacity(0.66))
                     .multilineTextAlignment(.center)
@@ -205,11 +205,11 @@ struct OnboardingView: View {
             OnboardingArtwork(page: .paywall)
                 .frame(height: 150)
 
-            Text(page.title)
+            Text(L(page.title))
                 .font(.system(size: 27, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
-            Text(page.subtitle)
+            Text(L(page.subtitle))
                 .font(.system(size: 14))
                 .foregroundColor(.white.opacity(0.66))
                 .multilineTextAlignment(.center)
@@ -234,13 +234,13 @@ struct OnboardingView: View {
                 if isPurchasing {
                     ProgressView().tint(.white)
                 } else {
-                    Text(didStartTrial ? "Trial Started" : "Start 3-Day Free Trial")
+                    Text(L(didStartTrial ? "Trial Started" : "Start 3-Day Free Trial"))
                 }
             }
             .buttonStyle(PrimaryButtonStyle(color: AppColor.brand))
             .disabled(isPurchasing)
 
-            Text("Auto-renews after 3 days. Cancel anytime in Settings.")
+            Text(L("Auto-renews after 3 days. Cancel anytime in Settings."))
                 .font(.system(size: 11))
                 .foregroundColor(.white.opacity(0.45))
                 .multilineTextAlignment(.center)
@@ -299,7 +299,7 @@ struct OnboardingView: View {
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(AppColor.brand)
                 .frame(width: 20)
-            Text(text)
+            Text(L(text))
                 .font(.system(size: 14))
                 .foregroundColor(.white.opacity(0.85))
         }
@@ -324,11 +324,11 @@ struct OnboardingView: View {
             OnboardingArtwork(page: .aboutYourself)
                 .frame(height: 160)
 
-            Text(page.title)
+            Text(L(page.title))
                 .font(.system(size: 27, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
-            Text(page.subtitle)
+            Text(L(page.subtitle))
                 .font(.system(size: 14))
                 .foregroundColor(.white.opacity(0.66))
                 .multilineTextAlignment(.center)
@@ -415,19 +415,19 @@ enum OnboardingPlan: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .yearly: return "Yearly"
-        case .weekly: return "Weekly"
+        case .yearly: return L("Yearly")
+        case .weekly: return L("Weekly")
         }
     }
     var caption: String {
         switch self {
-        case .yearly: return "3-day free trial, then $39.99/year"
-        case .weekly: return "3-day free trial, then $6.99/week"
+        case .yearly: return LF("3-day free trial, then %@/year", "$39.99")
+        case .weekly: return LF("3-day free trial, then %@/week", "$6.99")
         }
     }
     var price: String {
         switch self {
-        case .yearly: return "$3.33/mo"
+        case .yearly: return L("$3.33/mo")
         case .weekly: return "$6.99"
         }
     }
@@ -614,14 +614,14 @@ struct OnboardingArtwork: View {
                 .foregroundColor(color)
                 .frame(width: 36, height: 36)
                 .background(Circle().fill(color.opacity(0.14)))
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.white.opacity(0.8))
             Spacer()
             Text(value)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
-            Text(unit)
+            Text(L(unit))
                 .font(.system(size: 11))
                 .foregroundColor(.white.opacity(0.45))
         }
@@ -633,7 +633,7 @@ struct OnboardingArtwork: View {
 
     private func metricTile(title: String, value: String, unit: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(.white.opacity(0.55))
             HStack(alignment: .firstTextBaseline, spacing: 3) {

@@ -56,7 +56,7 @@ struct CSIView: View {
             }
         }
         .sheet(isPresented: $showInfo) {
-            InfoDocumentSheet(title: "Chronic Stress Index", markdown: csiInfoMarkdown)
+            InfoDocumentSheet(title: L("Chronic Stress Index"), markdown: localizedCSIInfo)
         }
         .sheet(item: Binding(get: { shareText.map(SharePayload.init) },
                              set: { if $0 == nil { shareText = nil } })) { payload in
@@ -132,7 +132,7 @@ struct CSIView: View {
 
     private func chartCard(result: Int) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Last 7 Stress Index readings")
+            Text(L("Last 7 Stress Index readings"))
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(AppColor.textSecondary)
             let values = lastSeven()
@@ -196,9 +196,9 @@ struct CSIView: View {
     }
 
     private var exportText: String {
-        "Heartica Chronic Stress Index\n" +
-        (progress.result.map { "Current SI: \($0)" } ?? "Protocol in progress") +
-        "\nDay \(progress.day) of 7\nGenerated \(Fmt.date(Date()))"
+        L("Heartica Chronic Stress Index") + "\n" +
+        (progress.result.map { LF("Current SI: %d", $0) } ?? L("Protocol in progress")) +
+        "\n" + LF("Day %d of 7", progress.day) + "\n" + L("Generated") + " " + Fmt.date(Date())
     }
 
     private func bandColor(_ name: String) -> Color {
@@ -260,7 +260,7 @@ struct HeartAgeView: View {
             }
         }
         .sheet(isPresented: $showInfo) {
-            InfoDocumentSheet(title: "Heart Age", markdown: heartAgeInfoMarkdown)
+            InfoDocumentSheet(title: L("Heart Age"), markdown: localizedHeartAgeInfo)
         }
         .sheet(isPresented: $showProfile) {
             ProfileView()
@@ -293,7 +293,7 @@ struct HeartAgeView: View {
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(AppColor.textPrimary)
                 if let age = appState.profile.age {
-                    Text("Chronological age: \(age)")
+                    Text(LF("Chronological age: %d", age))
                         .font(.system(size: 11))
                         .foregroundColor(AppColor.textSecondary)
                 }
@@ -327,7 +327,7 @@ struct HeartAgeView: View {
             Text("How it works")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(AppColor.textPrimary)
-            Text("Heart Age is estimated from the RMSSD of your last three measurements. It is a wellness indicator, not a medical diagnosis.")
+            Text(L("Heart Age is estimated from the RMSSD of your last three measurements. It is a wellness indicator, not a medical diagnosis."))
                 .font(.system(size: 12))
                 .foregroundColor(AppColor.textSecondary)
                 .lineSpacing(3)
@@ -482,3 +482,57 @@ We use the Root Mean Square of Successive Differences ([RMSSD](https://pmc.ncbi.
 > ### Disclaimer
 > This feature is intended for wellness and educational purposes only. It should not be used for medical diagnosis or treatment decisions.
 """
+
+
+private let csiInfoMarkdownZh = """
+## 慢性压力指数
+慢性压力指数由压力指数（SI）的 7 天平均值计算得出。
+
+### 核心指标
+我们使用 [Baevsky 压力指数](https://pmc.ncbi.nlm.nih.gov/articles/PMC10305391/)（SI）作为较准确的评估方法之一。
+
+SI 是反映心血管压力和交感神经活动的心率变异性几何指标，适合快速评估和长期监测压力水平。
+
+> ### 数值与解读
+>
+> 🔴 **极高压力**（>500）：严重的自主神经失调或压力过载。
+>
+> 🟠 **高压力**（300–500）：明显的身心紧张。
+>
+> 🟡 **压力升高**（150–299）：体力消耗或情绪紧张。
+>
+> 🟢 **正常**（50–149）：健康平衡、心血管适应良好。
+>
+> 🔵 **低压力**（<50）：状态平静、压力较低。
+
+规律监测有助于避免过度消耗、管理整体健康，并保持身心平衡。
+"""
+
+private let heartAgeInfoMarkdownZh = """
+## 心脏年龄
+心脏年龄是根据脉搏波信号估算的心血管“生物年龄”，可与实际年龄进行比较。
+
+### 核心指标
+我们使用相邻心跳间期差值的均方根（[RMSSD](https://pmc.ncbi.nlm.nih.gov/articles/PMC5624990/#S6)）。
+
+[科学研究](https://www.sciencedirect.com/science/article/pii/S0735109797005548)表明，RMSSD 与年龄存在统计学相关性。
+
+> ### 数值与解读
+>
+> 🟢 **良好**（低于实际年龄）：血管弹性优于同龄人
+>
+> 🟡 **相当**（接近实际年龄）：血管状态与生理年龄相符
+>
+> 🟠 **偏高**（高于实际年龄）：血管僵硬度高于同龄人
+
+> ### 免责声明
+> 此功能仅用于健康参考和教育，不应用于医学诊断或治疗决策。
+"""
+
+private var localizedCSIInfo: String {
+    LanguageStore.shared.effective == .chinese ? csiInfoMarkdownZh : csiInfoMarkdown
+}
+
+private var localizedHeartAgeInfo: String {
+    LanguageStore.shared.effective == .chinese ? heartAgeInfoMarkdownZh : heartAgeInfoMarkdown
+}

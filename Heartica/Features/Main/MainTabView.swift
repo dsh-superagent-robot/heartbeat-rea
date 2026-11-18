@@ -140,7 +140,7 @@ struct MainTabView: View {
             VStack(spacing: 4) {
                 Image(systemName: icon)
                     .font(.system(size: 19, weight: .semibold))
-                Text(title)
+                Text(L(title))
                     .font(.system(size: 10, weight: .semibold))
             }
             .foregroundColor(selection == tab ? AppColor.brand : AppColor.textSecondary)
@@ -165,7 +165,7 @@ struct MainTabView: View {
                         .font(.system(size: 24, weight: .semibold))
                         .foregroundColor(.white)
                 }
-                Text("Measure")
+                Text(L("Measure"))
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(AppColor.brand)
             }

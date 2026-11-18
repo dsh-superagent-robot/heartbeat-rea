@@ -4,6 +4,9 @@ A SwiftUI reconstruction of the Heartica heart-health app, built from the
 requirements document provided in
 [issue #1](https://github.com/dsh-superagent-robot/heartbeat-rea/issues/1).
 
+The app ships with a **简体中文 (Simplified Chinese)** interface by default and
+an English interface selectable in **Settings → Language / 语言**.
+
 The app is an iPhone-only wellness application: measure heart rate with the
 camera, review derived HRV metrics, log blood pressure / oxygen / glucose, read
 educational insights, follow multi-day protocols and health journeys, and manage
@@ -104,4 +107,4 @@ deliberate substitutions:
 Debug-only launch variables are available for review and screenshot capture:
 `HEARTICA_DEMO=1`, `HEARTICA_TAB=0…3`, `HEARTICA_MEASURE=1`,
 `HEARTICA_AUTOSTART=1`, `HEARTICA_SCREEN=history|achievements|journey|csi|heartage|monthly|settings`,
-`HEARTICA_PREMIUM=1`, `HEARTICA_PAYWALL=1`.
+`HEARTICA_PREMIUM=1`, `HEARTICA_PAYWALL=1`, `HEARTICA_LANG=chinese|english|system`.

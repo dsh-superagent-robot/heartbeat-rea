@@ -151,11 +151,11 @@ final class HeartAgeService {
         guard let result, let age = profile.age else { return nil }
         let diff = result - age
         if abs(diff) <= 6 {
-            return ("Equal", "yellow", "Heart age matches your biological age")
+            return (L("Equal"), "yellow", L("Heart age matches your biological age"))
         } else if diff >= 7 {
-            return ("High", "red", "Heart age is above your biological age")
+            return (L("High"), "red", L("Heart age is above your biological age"))
         } else {
-            return ("Good", "green", "Heart age is below your biological age")
+            return (L("Good"), "green", L("Heart age is below your biological age"))
         }
     }
 

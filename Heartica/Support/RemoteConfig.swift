@@ -38,7 +38,7 @@ enum RemoteConfig {
 enum ChartType: String, CaseIterable, Identifiable {
     case bar, line
     var id: String { rawValue }
-    var title: String { rawValue.capitalized }
+    var title: String { L(rawValue.capitalized) }
 }
 
 enum ChartTimeRange: String, CaseIterable, Identifiable {
@@ -46,11 +46,11 @@ enum ChartTimeRange: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .day: return "Day"
-        case .week: return "Week"
-        case .month: return "Month"
-        case .threeMonths: return "3 Months"
-        case .year: return "Year"
+        case .day: return L("Day")
+        case .week: return L("Week")
+        case .month: return L("Month")
+        case .threeMonths: return L("3 Months")
+        case .year: return L("Year")
         }
     }
     var days: Int {

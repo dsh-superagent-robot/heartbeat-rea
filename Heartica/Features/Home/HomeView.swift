@@ -85,10 +85,10 @@ struct HomeView: View {
 
     private var dateSubtitle: String {
         let calendar = Calendar.current
-        if calendar.isDateInToday(Date()) { return "Today" }
-        if calendar.isDateInYesterday(Date()) { return "Yesterday" }
+        if calendar.isDateInToday(Date()) { return L("Today") }
+        if calendar.isDateInYesterday(Date()) { return L("Yesterday") }
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.locale = LanguageStore.shared.effectiveLocale
         formatter.dateFormat = "EEEE"
         return formatter.string(from: Date())
     }
@@ -182,7 +182,7 @@ struct HomeView: View {
 
     private func smallMetric(_ title: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 10, weight: .medium))
                 .foregroundColor(.white.opacity(0.6))
             Text(value)
@@ -208,10 +208,10 @@ struct HomeView: View {
                         .foregroundColor(.white.opacity(0.8))
 
                         let progress = CSIService.shared.progress
-                        Text(progress.started ? "\(progress.result ?? progress.day)" : "7-Day Protocol")
+                        Text(progress.started ? "\(progress.result ?? progress.day)" : L("7-Day Protocol"))
                             .font(.system(size: progress.started ? 38 : 26, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
-                        Text(progress.started ? "Day \(progress.day) of 7" : "Measure daily to reveal your stress pattern")
+                        Text(progress.started ? LF("Day %d of 7", progress.day) : L("Measure daily to reveal your stress pattern"))
                             .font(.system(size: 12))
                             .foregroundColor(.white.opacity(0.65))
                         HStack(spacing: 4) {
@@ -254,14 +254,14 @@ struct HomeView: View {
                             Text("\(age)")
                                 .font(.system(size: 40, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
-                            Text("years — your heart's age")
+                            Text(L("years — your heart's age"))
                                 .font(.system(size: 12))
                                 .foregroundColor(.white.opacity(0.65))
                         } else {
-                            Text(progress.started ? "\(progress.count) of 3" : "3-Measurement")
+                            Text(progress.started ? LF("%d of 3", progress.count) : L("3-Measurement"))
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
-                            Text(progress.started ? "measurements collected" : "protocol to reveal your heart age")
+                            Text(progress.started ? L("measurements collected") : L("protocol to reveal your heart age"))
                                 .font(.system(size: 12))
                                 .foregroundColor(.white.opacity(0.65))
                         }
@@ -360,10 +360,10 @@ struct HomeView: View {
                 .frame(width: 44, height: 44)
                 .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(color.opacity(0.12)))
             VStack(alignment: .leading, spacing: 3) {
-                Text(title)
+                Text(L(title))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
-                Text(subtitle)
+                Text(L(subtitle))
                     .font(.system(size: 12))
                     .foregroundColor(AppColor.textSecondary)
                     .lineLimit(2)
@@ -380,7 +380,7 @@ struct HomeView: View {
                             .foregroundColor(AppColor.textSecondary)
                     }
                 }
-                Button(button, action: action)
+                Button(L(button), action: action)
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(color)
             }
@@ -406,10 +406,10 @@ struct HomeView: View {
                         .foregroundColor(AppColor.brand)
                 }
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("Level \(JourneyService.shared.currentLevel.id)")
+                    Text(L("Level") + " \(JourneyService.shared.currentLevel.id)")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(AppColor.textPrimary)
-                    Text(JourneyService.shared.currentLevel.title)
+                    Text(L(JourneyService.shared.currentLevel.title))
                         .font(.system(size: 13))
                         .foregroundColor(AppColor.textSecondary)
                 }
@@ -430,14 +430,15 @@ struct HomeView: View {
 
     private var measurementsSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            SectionTitle(title: "Measurements", actionTitle: "History") {
-                // Navigation handled by the History link below.
-            }
-            .overlay(alignment: .trailing) {
+            HStack {
+                Text(L("Measurements"))
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(AppColor.textPrimary)
+                Spacer()
                 NavigationLink {
                     HistoryView()
                 } label: {
-                    Text("History")
+                    Text(L("History"))
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(AppColor.brand)
                 }
@@ -480,7 +481,7 @@ struct HomeView: View {
                     .foregroundColor(AppColor.brand)
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(Int(measurement.pulse)) bpm")
+                Text(LF("%d bpm", Int(measurement.pulse)))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
                 Text("\(Fmt.date(measurement.time, format: "MMM d")) · \(Fmt.time(measurement.time))")

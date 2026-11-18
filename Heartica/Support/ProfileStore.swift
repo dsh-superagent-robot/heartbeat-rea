@@ -77,9 +77,9 @@ enum Gender: Int, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .female: return "Female"
-        case .male: return "Male"
-        case .notSet: return "Not Set"
+        case .female: return L("Female")
+        case .male: return L("Male")
+        case .notSet: return L("Not Set")
         }
     }
 }
@@ -162,9 +162,9 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .system: return "System"
-        case .light: return "Light"
-        case .dark: return "Dark"
+        case .system: return L("System")
+        case .light: return L("Light")
+        case .dark: return L("Dark")
         }
     }
     var colorScheme: ColorScheme? {
@@ -181,9 +181,9 @@ enum MeasuringMode: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .fast: return "Fast"
-        case .standard: return "Standard"
-        case .precise: return "Precise"
+        case .fast: return L("Fast")
+        case .standard: return L("Standard")
+        case .precise: return L("Precise")
         }
     }
     var duration: TimeInterval {

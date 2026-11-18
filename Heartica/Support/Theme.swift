@@ -129,12 +129,12 @@ struct SectionTitle: View {
 
     var body: some View {
         HStack {
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(AppColor.textPrimary)
             Spacer()
             if let actionTitle, let action {
-                Button(actionTitle, action: action)
+                Button(L(actionTitle), action: action)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColor.brand)
             }
@@ -184,10 +184,10 @@ struct EmptyStateView: View {
             Image(systemName: icon)
                 .font(.system(size: 36, weight: .light))
                 .foregroundColor(AppColor.textSecondary)
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(AppColor.textPrimary)
-            Text(message)
+            Text(L(message))
                 .font(.system(size: 14))
                 .foregroundColor(AppColor.textSecondary)
                 .multilineTextAlignment(.center)
@@ -221,11 +221,28 @@ enum Fmt {
         return formatter.string(from: NSNumber(value: value)) ?? String(format: "%.\(digits)f", value)
     }
 
+    static var isChinese: Bool { LanguageStore.shared.effective == .chinese }
+
     static func date(_ date: Date, format: String = "MMM d, yyyy") -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = format
+        f.locale = LanguageStore.shared.effectiveLocale
+        f.dateFormat = isChinese ? chineseFormat(for: format) : format
         return f.string(from: date)
+    }
+
+    private static func chineseFormat(for format: String) -> String {
+        switch format {
+        case "MMM d, yyyy", "MMMM d, yyyy": return "yyyy年M月d日"
+        case "MMM d": return "M月d日"
+        case "MMMM yyyy": return "yyyy年M月"
+        case "MMM yyyy": return "yyyy年M月"
+        case "h:mm a": return "HH:mm"
+        case "MMM d, h:mm a": return "M月d日 HH:mm"
+        case "MMM d, yyyy · h:mm a", "MMMM d, yyyy · h:mm a": return "yyyy年M月d日 HH:mm"
+        case "EEEE, MMM d": return "M月d日 EEEE"
+        case "EEEE": return "EEEE"
+        default: return format
+        }
     }
 
     static func time(_ date: Date) -> String {

@@ -49,35 +49,35 @@ enum VitalsStatus {
 
     static func pressure(sys: Int) -> Band {
         switch sys {
-        case ..<90: return Band(title: "Low", color: "blue", interpretation: "Hypotension")
-        case 90..<120: return Band(title: "Normal", color: "green", interpretation: "Healthy level")
-        case 120..<130: return Band(title: "Elevated", color: "yellow", interpretation: "Elevated blood pressure")
-        case 130..<140: return Band(title: "High", color: "orange", interpretation: "Stage 1 Hypertension")
-        default: return Band(title: "Very High", color: "red", interpretation: "Stage 2 Hypertension")
+        case ..<90: return Band(title: L("Low"), color: "blue", interpretation: L("Hypotension"))
+        case 90..<120: return Band(title: L("Normal"), color: "green", interpretation: L("Healthy level"))
+        case 120..<130: return Band(title: L("Elevated"), color: "yellow", interpretation: L("Elevated blood pressure"))
+        case 130..<140: return Band(title: L("High"), color: "orange", interpretation: L("Stage 1 Hypertension"))
+        default: return Band(title: L("Very High"), color: "red", interpretation: L("Stage 2 Hypertension"))
         }
     }
 
     static func oxygen(_ value: Int) -> Band {
         switch value {
-        case ..<90: return Band(title: "Very Low", color: "red", interpretation: "Requires medical care")
-        case 90..<96: return Band(title: "Low", color: "orange", interpretation: "Risk of hypoxemia")
-        default: return Band(title: "Normal", color: "green", interpretation: "Normal oxygen level")
+        case ..<90: return Band(title: L("Very Low"), color: "red", interpretation: L("Requires medical care"))
+        case 90..<96: return Band(title: L("Low"), color: "orange", interpretation: L("Risk of hypoxemia"))
+        default: return Band(title: L("Normal"), color: "green", interpretation: L("Normal oxygen level"))
         }
     }
 
     static func glucose(mgdl: Double, afterMeal: Bool) -> Band {
         if afterMeal {
             switch mgdl {
-            case 200...: return Band(title: "High", color: "red", interpretation: "Possible diabetes range")
-            case 140..<200: return Band(title: "Elevated", color: "yellow", interpretation: "Prediabetes range")
-            default: return Band(title: "Normal", color: "green", interpretation: "Healthy post-meal level")
+            case 200...: return Band(title: L("High"), color: "red", interpretation: L("Possible diabetes range"))
+            case 140..<200: return Band(title: L("Elevated"), color: "yellow", interpretation: L("Prediabetes range"))
+            default: return Band(title: L("Normal"), color: "green", interpretation: L("Healthy post-meal level"))
             }
         } else {
             switch mgdl {
-            case 126...: return Band(title: "High", color: "red", interpretation: "Possible diabetes range")
-            case 100..<126: return Band(title: "Elevated", color: "yellow", interpretation: "Prediabetes range")
-            case 70..<100: return Band(title: "Normal", color: "green", interpretation: "Healthy fasting level")
-            default: return Band(title: "Low", color: "blue", interpretation: "Low blood sugar")
+            case 126...: return Band(title: L("High"), color: "red", interpretation: L("Possible diabetes range"))
+            case 100..<126: return Band(title: L("Elevated"), color: "yellow", interpretation: L("Prediabetes range"))
+            case 70..<100: return Band(title: L("Normal"), color: "green", interpretation: L("Healthy fasting level"))
+            default: return Band(title: L("Low"), color: "blue", interpretation: L("Low blood sugar"))
             }
         }
     }
@@ -89,17 +89,17 @@ enum VitalsKind: String, Identifiable {
 
     var title: String {
         switch self {
-        case .pressure: return "Blood Pressure"
-        case .oxygen: return "Blood Oxygen"
-        case .glucose: return "Blood Sugar"
+        case .pressure: return L("Blood Pressure")
+        case .oxygen: return L("Blood Oxygen")
+        case .glucose: return L("Blood Sugar")
         }
     }
 
     var button: String {
         switch self {
-        case .pressure: return "Log Blood Pressure"
-        case .oxygen: return "Log Oxygen"
-        case .glucose: return "Log Sugar"
+        case .pressure: return L("Log Blood Pressure")
+        case .oxygen: return L("Log Oxygen")
+        case .glucose: return L("Log Sugar")
         }
     }
 
@@ -281,7 +281,7 @@ struct ManualVitalsView: View {
 
     private func wheelColumn<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(spacing: 4) {
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundColor(AppColor.textSecondary)
             content()
@@ -309,7 +309,7 @@ struct ManualVitalsView: View {
                         .font(.system(size: 15, weight: .medium))
                         .foregroundColor(AppColor.textPrimary)
                     Spacer()
-                    Text(TagResolver.title(for: tagId) ?? "Add a Tag")
+                    Text(TagResolver.title(for: tagId) ?? L("Add a Tag"))
                         .font(.system(size: 13))
                         .foregroundColor(AppColor.brand)
                     Image(systemName: "chevron.right")
@@ -331,7 +331,7 @@ struct ManualVitalsView: View {
                 Text(status.interpretation)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(AppColor.textPrimary)
-                Text("Status is based on your \(kind == .pressure ? "systolic" : "current") reading")
+                Text(LF("Status is based on your %@ reading", kind == .pressure ? L("systolic") : L("current")))
                     .font(.system(size: 11))
                     .foregroundColor(AppColor.textSecondary)
             }
@@ -465,10 +465,10 @@ struct VitalsDetailView: View {
 
     private var title: String {
         switch log {
-        case .pressure: return "Blood Pressure"
-        case .oxygen: return "Blood Oxygen"
-        case .glucose: return "Blood Sugar"
-        case .heart: return "Measurement"
+        case .pressure: return L("Blood Pressure")
+        case .oxygen: return L("Blood Oxygen")
+        case .glucose: return L("Blood Sugar")
+        case .heart: return L("Measurement")
         }
     }
 

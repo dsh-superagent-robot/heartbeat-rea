@@ -36,7 +36,7 @@ struct AchievementsView: View {
 
     private func summaryTile(title: String, value: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(title)
+            Text(L(title))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundColor(AppColor.textSecondary)
             Text(value)
@@ -53,7 +53,7 @@ struct AchievementsView: View {
         let progress = service.categoryProgress(category.id)
         return VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(category.title)
+                Text(L(category.title))
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(AppColor.textPrimary)
                 Spacer()
@@ -92,7 +92,7 @@ struct AchievementsView: View {
                         .font(.system(size: 14))
                 }
             }
-            Text(seed.title)
+            Text(L(seed.title))
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(AppColor.textPrimary)
                 .lineLimit(1)
@@ -138,19 +138,19 @@ struct AchievementDetailSheet: View {
                             .frame(width: 58, height: 58)
                             .background(Circle().fill(AppColor.brandSoft))
                         VStack(alignment: .leading, spacing: 3) {
-                            Text(seed.title)
+                            Text(L(seed.title))
                                 .font(.system(size: 22, weight: .bold, design: .rounded))
-                            Text(seed.subtitle)
+                            Text(L(seed.subtitle))
                                 .font(.system(size: 13))
                                 .foregroundColor(AppColor.textSecondary)
                         }
                     }
-                    Text(seed.description)
+                    Text(L(seed.description))
                         .font(.system(size: 14))
                         .foregroundColor(AppColor.textSecondary)
                         .lineSpacing(3)
                     HStack {
-                        Text("Current progress")
+                        Text(L("Current progress"))
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(AppColor.textSecondary)
                         Spacer()
@@ -159,7 +159,7 @@ struct AchievementDetailSheet: View {
                     }
                     .card(padding: 14)
 
-                    Text("Tiers")
+                    Text(L("Tiers"))
                         .font(.system(size: 16, weight: .semibold))
                     VStack(spacing: 0) {
                         ForEach(Array(seed.tiers.enumerated()), id: \.offset) { index, tier in
@@ -167,7 +167,7 @@ struct AchievementDetailSheet: View {
                                 Circle()
                                     .fill(value >= tier ? AppColor.success : AppColor.separator)
                                     .frame(width: 8, height: 8)
-                                Text("Tier \(index + 1)")
+                                Text(LF("Tier %d", index + 1))
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundColor(AppColor.textPrimary)
                                 Spacer()
@@ -244,10 +244,10 @@ struct JourneyView: View {
         return VStack(alignment: .leading, spacing: 12) {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("Chapter \(chapter.id) · \(chapter.title)")
+                    Text(LF("Chapter %d", chapter.id) + " · " + L(chapter.title))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(AppColor.textSecondary)
-                    Text("Level \(level.id): \(level.title)")
+                    Text(LF("Level %d", level.id) + ": " + L(level.title))
                         .font(.system(size: 22, weight: .bold, design: .rounded))
                         .foregroundColor(AppColor.textPrimary)
                 }
@@ -266,7 +266,7 @@ struct JourneyView: View {
                         .foregroundColor(AppColor.textPrimary)
                 }
             }
-            Text(chapter.description)
+            Text(L(chapter.description))
                 .font(.system(size: 12))
                 .foregroundColor(AppColor.textSecondary)
                 .lineSpacing(2)
@@ -321,15 +321,15 @@ struct JourneyView: View {
 
     private func groupTitle(_ group: String) -> String {
         switch group {
-        case "core": return "MAIN"
-        case "optional": return "OPTIONAL"
-        default: return "PRO"
+        case "core": return L("MAIN")
+        case "optional": return L("OPTIONAL")
+        default: return L("PRO")
         }
     }
 
     private var chaptersSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Chapters")
+            Text(L("Chapters"))
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(AppColor.textPrimary)
             ForEach(JourneyCatalog.chapters) { chapter in
@@ -344,10 +344,10 @@ struct JourneyView: View {
                             .frame(width: 34, height: 34)
                             .background(Circle().fill((service.chapterIsUnlocked(chapter) ? AppColor.brand : AppColor.textSecondary).opacity(0.12)))
                         VStack(alignment: .leading, spacing: 3) {
-                            Text(chapter.title)
+                            Text(L(chapter.title))
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(AppColor.textPrimary)
-                            Text("\(service.levels(in: chapter).count) levels")
+                            Text(LF("%d levels", service.levels(in: chapter).count))
                                 .font(.system(size: 10))
                                 .foregroundColor(AppColor.textSecondary)
                         }
@@ -392,14 +392,14 @@ struct JourneyChapterSheet: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(chapter.description)
+                    Text(L(chapter.description))
                         .font(.system(size: 13))
                         .foregroundColor(AppColor.textSecondary)
                         .lineSpacing(2)
                     ForEach(service.levels(in: chapter)) { level in
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
-                                Text("Level \(level.id) · \(level.title)")
+                                Text(LF("Level %d", level.id) + " · " + L(level.title))
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundColor(AppColor.textPrimary)
                                 Spacer()
@@ -407,7 +407,7 @@ struct JourneyChapterSheet: View {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(AppColor.success)
                                 } else if level.id == service.currentLevel.id {
-                                    Text("Current")
+                                    Text(L("Current"))
                                         .font(.system(size: 9, weight: .bold))
                                         .foregroundColor(AppColor.brand)
                                 }
@@ -430,7 +430,7 @@ struct JourneyChapterSheet: View {
                 .padding(18)
             }
             .screenBackground()
-            .navigationTitle("Chapter \(chapter.id)")
+            .navigationTitle(LF("Chapter %d", chapter.id))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
