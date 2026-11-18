@@ -54,8 +54,8 @@ struct MainTabView: View {
             }
         }
         .task {
-            checkWhatsNew()
             applyDebugRouteIfNeeded()
+            checkWhatsNew()
         }
     }
 
@@ -99,6 +99,7 @@ struct MainTabView: View {
     }
 
     private func checkWhatsNew() {
+        guard !showMeasure else { return }
         let defaults = UserDefaults.standard
         let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "2.10"
         let seen = defaults.string(forKey: UDKey.whatsNewLastSeenVersion) ?? ""
