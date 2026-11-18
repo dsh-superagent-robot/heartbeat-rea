@@ -1,0 +1,78 @@
+name: Heartica
+options:
+  bundleIdPrefix: com.heart.rate
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "27.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+targets:
+  Heartica:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Heartica
+    info:
+      path: Heartica/Info.plist
+      properties:
+        CFBundleDisplayName: Heartica
+        CFBundleShortVersionString: "2.10"
+        CFBundleVersion: "582"
+        LSRequiresIPhoneOS: true
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIUserInterfaceStyle: Automatic
+        NSCameraUsageDescription: We need access to your camera to measure your heart rate.
+        NSHealthShareUsageDescription: Heartica reads your heart rate and activity data to provide personalized and detailed health insights.
+        NSHealthUpdateUsageDescription: Heartica saves your measurements to Apple Health so your data stays in one place.
+        NSUserTrackingUsageDescription: It helps us to track where you came from and improve your experience.
+        UIBackgroundModes:
+          - fetch
+          - remote-notification
+        ITSAppUsesNonExemptEncryption: false
+        CFBundleURLTypes:
+          - CFBundleURLName: com.heart.rate.heartica
+            CFBundleURLSchemes:
+              - HeartRate
+              - heartica
+    entitlements:
+      path: Heartica/Heartica.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.heart.rate.heartica
+        PRODUCT_NAME: Heartica
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        MARKETING_VERSION: "2.10"
+        CURRENT_PROJECT_VERSION: "582"
+        SUPPORTS_MACCATALYST: NO
+        ENABLE_PREVIEWS: YES
+    scheme:
+      testTargets:
+        - HearticaTests
+  HearticaTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: HearticaTests
+    dependencies:
+      - target: Heartica
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.heart.rate.heartica.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Heartica.app/Heartica"
+        BUNDLE_LOADER: "$(TEST_HOST)"
