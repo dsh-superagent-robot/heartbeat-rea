@@ -1,0 +1,16 @@
+$ git log --oneline origin/main -1
+cacf33c Initial commit
+
+$ git ls-tree -r --name-only origin/main
+.gitignore
+
+$ gh issue view 1 --json title,body
+title: 应用公开
+body:  帮我按照需求文档开发应用，注意使用 xcodegen 来构建项目
+       需求文档.md (GitHub attachment)
+
+Baseline: the repository contained no application source, no Xcode
+project, and no screenshots. There was no previous UI to capture;
+this evidence records the empty pre-change repository state.
+
+Issue: https://github.com/dsh-superagent-robot/heartbeat-rea/issues/1

@@ -16,3 +16,6 @@ Pods/
 **/Pods/
 Podfile.lock
 **/Podfile.lock
+
+# XcodeGen generated project
+*.xcodeproj
